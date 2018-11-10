@@ -34,9 +34,35 @@ const server = http.createServer(function(req, res){
 
 	req.on('end', function(){
 		buffer += decoder.end();
-		// Send the response
-		res.end('Hello World!\n');
-		console.log('request received with this payload ' + buffer);
+
+		// Determine the chosen handler
+		let chosenHandler = typeof(handlers[trimmedPath]) !== 'undefined' ? handlers[trimmedPath] : handlers.notFound;
+
+		// construct the data object 
+		let data = {
+			trimmedPath,
+			queryStrObj,
+			method,
+			payload: buffer,
+		};
+
+		chosenHandler(data, function(statusCode, message){
+			
+			// Check if the status code is a number
+			statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
+			
+			// Check if the message was an object
+			message = typeof(message) == 'string' ? message : '';
+
+			// Send the response
+			res.writeHead(statusCode);
+			res.end(message);
+
+			// Log the response 
+			console.log('Sent this response ', statusCode, message);
+
+		});
+
 	});
 
 });
@@ -46,3 +72,19 @@ const server = http.createServer(function(req, res){
 server.listen(3000,function(){
 	console.log('listening on port 3000');
 });
+
+// Add the handlers
+var handlers = {};
+
+handlers.hello = function(data,callback){
+	callback(406, 'Hello World!');
+};
+
+handlers.notFound = function(data,callback){
+	callback(404);
+};
+
+
+
+
+
