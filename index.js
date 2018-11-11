@@ -2,6 +2,7 @@
 const http = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
+const config = require('./config');
 
 // Create Server
 const server = http.createServer(function(req, res){
@@ -52,14 +53,16 @@ const server = http.createServer(function(req, res){
 			statusCode = typeof(statusCode) == 'number' ? statusCode : 200;
 			
 			// Check if the message was an object
-			message = typeof(message) == 'string' ? message : '';
+			message = typeof(message) == 'object' ? message : {};
+			let messageStr = JSON.stringify(message)
 
 			// Send the response
+			res.setHeader('Content-Type', 'application/json');
 			res.writeHead(statusCode);
-			res.end(message);
+			res.end(messageStr);
 
 			// Log the response 
-			console.log('Sent this response ', statusCode, message);
+			console.log('Sent this response ', statusCode, messageStr);
 
 		});
 
@@ -69,15 +72,15 @@ const server = http.createServer(function(req, res){
 
 
 // Listenn on port 3000 for incoming requests
-server.listen(3000,function(){
-	console.log('listening on port 3000');
+server.listen(config.port,function(){
+	console.log('listening on port ' + config.port);
 });
 
 // Add the handlers
 var handlers = {};
 
 handlers.hello = function(data,callback){
-	callback(406, 'Hello World!');
+	callback(406, {hello: 'World!'});
 };
 
 handlers.notFound = function(data,callback){
