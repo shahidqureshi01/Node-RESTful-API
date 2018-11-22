@@ -3,6 +3,7 @@ const http = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const config = require('./config');
+const handlers = require('./lib/handlers')
 
 // Create Server
 const server = http.createServer(function(req, res){
@@ -76,16 +77,6 @@ server.listen(config.port,function(){
 	console.log('listening on port ' + config.port);
 });
 
-// Add the handlers
-var handlers = {};
-
-handlers.hello = function(data,callback){
-	callback(406, {hello: 'World!'});
-};
-
-handlers.notFound = function(data,callback){
-	callback(404);
-};
 
 
 
