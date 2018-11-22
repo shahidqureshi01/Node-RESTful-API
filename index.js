@@ -3,6 +3,11 @@ const http = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const config = require('./config');
+const _data = require('./lib/data');
+
+_data.delete('users', 'testFile2', function(error){
+	console.log(error);
+});
 
 // Create Server
 const server = http.createServer(function(req, res){
