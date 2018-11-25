@@ -2,8 +2,9 @@
 const http = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
-const config = require('./config');
-const handlers = require('./lib/handlers')
+const config = require('./lib/config');
+const handlers = require('./lib/handlers');
+const helpers = require('./lib/helpers');
 
 // Create Server
 const server = http.createServer(function(req, res){
@@ -45,7 +46,7 @@ const server = http.createServer(function(req, res){
 			trimmedPath,
 			queryStrObj,
 			method,
-			payload: buffer,
+			payload: helpers.parseJsonToObject(buffer)
 		};
 
 		chosenHandler(data, function(statusCode, message){
