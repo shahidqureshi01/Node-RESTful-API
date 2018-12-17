@@ -6,6 +6,25 @@ const config = require('./lib/config');
 const handlers = require('./lib/handlers');
 const helpers = require('./lib/helpers');
 
+// delte the following code after test
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
+helpers.createOrder(10,function(res){
+	console.log(res);
+});
+
+
 // Create Server
 const server = http.createServer(function(req, res){
 
@@ -46,6 +65,7 @@ const server = http.createServer(function(req, res){
 			trimmedPath,
 			queryStrObj,
 			method,
+			headers,
 			payload: helpers.parseJsonToObject(buffer)
 		};
 
