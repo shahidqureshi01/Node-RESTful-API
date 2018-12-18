@@ -20,8 +20,8 @@ const getCircularReplacer = () => {
   };
 };
 
-helpers.createOrder(10,function(res){
-	console.log(res);
+helpers.sendEmail('shahidsabir21@hotmail.com', 'This is a test email 18 Jan',function(res){
+	console.log(res.statusCode);
 });
 
 
